@@ -3,7 +3,9 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                sh 'docker build -t app:latest .'
+                script {
+                    docker.build("my-app:latest")
+                }
             }
         }
     }
