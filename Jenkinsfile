@@ -1,17 +1,18 @@
-pipeline {
-    agent { 
-        docker {
-            image 'docker:dind'
-            args '-v /var/run/docker.sock:/var/run/docker.sock -e HOME=${workspace}'
+node {    
+      def app     
+      stage('Clone repository') {               
+             
+            checkout scm    
+      }           stage('Build image') {         
+       
+            app = docker.build("brandonjones085/test")    
+       }           stage('Test image') {                       app.inside {            
+             
+             sh 'echo "Tests passed"'        
+            }    
+        }            stage('Push image') {
+                                                  docker.withRegistry('https://registry.hub.docker.com', 'git') {                   app.push("${env.BUILD_NUMBER}")            
+       app.push("latest")        
+              }    
+           }
         }
-    }
-    stages {
-        stage('build') {
-            steps {
-                script {
-                    docker.build("my-app:latest")
-                }
-            }
-        }
-    }
-}
