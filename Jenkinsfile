@@ -1,5 +1,5 @@
 pipeline {
-    agent { docker { image 'dind' } }
+    agent { docker { image 'docker:dind' } }
     stages {
         stage('build') {
             steps {
